@@ -1,4 +1,4 @@
--- Active: 1742151109658@@127.0.0.1@5432@bookstore_db
+-- Active: 1742151109658@@127.0.0.1@5432@postgres
 -- create database bookstore_db
 CREATE DATABASE bookstore_db;
 
@@ -56,10 +56,9 @@ INSERT INTO orders (customer_id, book_id, quantity, order_date) VALUES
 (1, 3, 2, '2024-03-05');
 
 
-
+-- show all data use this 
 select * from books;
 select * from customers;    
-
 select * from orders;
 
 
@@ -74,10 +73,11 @@ SELECT * FROM books where price=(select MAX(price) from books);
 -- 3️⃣ Find the total number of orders placed by each customer.
 
 
-SELECT name, COUNT(*) AS total_orders
+SELECT name, COUNT(*) AS orders_count
     FROM customers 
         JOIN orders  ON orders.customer_id = customers.id
-            GROUP BY customers.id;
+            GROUP BY customers.id 
+            ORDER BY orders_count DESC;
 
 -- 4️⃣ Calculate the total revenue generated from book sales.
 SELECT SUM(price * quantity) AS total_revenue
@@ -96,8 +96,8 @@ SELECT name, COUNT(*) AS orders_count FROM customers
 SELECT ROUND(AVG(price),2) AS avg_book_price FROM books;
 
 -- 7️⃣ Increase the price of all books published before 2000 by 10%.
-
 UPDATE books SET price = price * 1.1 WHERE published_year < 2000;
+
 
 -- 8️⃣ Delete customers who haven't placed any orders.
 DELETE FROM customers 
