@@ -48,6 +48,7 @@ CREATE TABLE orders (
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
 -- insert into orders table
 INSERT INTO orders (customer_id, book_id, quantity, order_date) VALUES
 (1, 2, 1, '2024-03-10'),
@@ -60,3 +61,47 @@ select * from books;
 select * from customers;    
 
 select * from orders;
+
+
+
+-- 1️⃣ Find books that are out of stock
+SELECT title FROM books WHERE stock = 0;
+
+
+-- 2️⃣ Retrieve the most expensive book in the store.
+SELECT * FROM books where price=(select MAX(price) from books);
+
+-- 3️⃣ Find the total number of orders placed by each customer.
+
+
+SELECT name, COUNT(*) AS total_orders
+    FROM customers 
+        JOIN orders  ON orders.customer_id = customers.id
+            GROUP BY customers.id;
+
+-- 4️⃣ Calculate the total revenue generated from book sales.
+SELECT SUM(price * quantity) AS total_revenue
+    FROM books 
+        JOIN orders ON orders.book_id = books.id;
+
+
+
+-- 5️⃣ List all customers who have placed more than one order.
+SELECT name, COUNT(*) AS orders_count FROM customers 
+    JOIN orders  ON orders.customer_id = customers.id
+        GROUP BY customers.id
+            HAVING COUNT(*) >1;
+
+-- 6️⃣ Find the average price of books in the store.
+SELECT ROUND(AVG(price),2) AS avg_book_price FROM books;
+
+-- 7️⃣ Increase the price of all books published before 2000 by 10%.
+
+UPDATE books SET price = price * 1.1 WHERE published_year < 2000;
+
+-- 8️⃣ Delete customers who haven't placed any orders.
+DELETE FROM customers 
+    WHERE id NOT IN (SELECT DISTINCT customer_id FROM orders);
+
+
+
